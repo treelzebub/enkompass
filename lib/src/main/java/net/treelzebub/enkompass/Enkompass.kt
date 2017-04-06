@@ -10,6 +10,20 @@ import android.text.SpannableStringBuilder
 
 
 /**
+ * Feed it a substring and get the range of indices in the outer string.
+ *
+ * @param substring  a substring contained in the extended CharSequence. Will explode if
+ *                   substring does not exist.
+ */
+fun CharSequence.which(substring: String): IntRange {
+    return toString().let {
+        val start = it.indexOf(substring)
+        val end = it.lastIndexOf(substring)
+        IntRange(start, end)
+    }
+}
+
+/**
  * TODO setSpan's param `flags` is undocumented. fun.
  *
  * Set one or many Spans on a substring contained in the extended Spannable.
@@ -38,23 +52,11 @@ fun SpannableStringBuilder.enkompassAll(vararg spans: Any) = apply {
 }
 
 /**
- * I provide this because Android has provided us with a construct that appears to be a Builder Pattern,
+ * I provide this because Android has given us a construct that appears to be a Builder Pattern,
  * but is nothing of the sort. That's what Enkompass is all about. Obviously, this call is optional,
  * but I find it to be useful to the reader: a clear signal that this is a CharSequence that can be
  * passed to TextView.setText()
- */
-fun SpannableStringBuilder.build() = this
-
-/**
- * Feed it a substring and get the range of indices in the outer string.
  *
- * @param substring  a substring contained in the extended CharSequence. Will explode if
- *                   substring does not exist.
+ * TODO look into TextView.setSpannableFactory()
  */
-fun CharSequence.which(substring: String): IntRange {
-    return toString().let {
-        val start = it.indexOf(substring)
-        val end = it.lastIndexOf(substring)
-        IntRange(start, end)
-    }
-}
+fun SpannableStringBuilder.build(): CharSequence = this
