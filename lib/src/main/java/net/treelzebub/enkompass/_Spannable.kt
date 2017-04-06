@@ -38,8 +38,11 @@ object Examples {
 
     // Span various parts of a single String in one go.
     fun builderPattern(): CharSequence {
-        val body = "My very long text sequence with lots of links and bold and italics and stuff"
+        val body = "My very long text sequence with a link and bold and italics and stuff"
         return body.toSpannable()
+                   .clickable("link") {
+                       // open a web page or whatever.
+                   }
                    .bold("bold")
                    .italics("italics")
                    .monospace("and stuff")
@@ -53,7 +56,9 @@ object Examples {
             .enkompassAll(
                     StyleSpan(Typeface.BOLD),
                     ClickSpan {
-                        view -> // sets an OnClickListener.
+                        view ->
+                        // Sets an OnClickListener.
+                        // Do stuff with the View, or startActivity(), or something else...
                     })
             .build()
     }
