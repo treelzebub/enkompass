@@ -10,26 +10,17 @@ import android.text.SpannableStringBuilder
 
 
 /**
- * Feed it a substring and get the range of indices in the outer string.
+ * Set one or many Spans on a substring contained in the extended String.
+ * Will explode if substring does not exist.
  *
- * @param substring  a substring contained in the extended CharSequence. Will explode if
- *                   substring does not exist.
+ * @return  a [SpannableStringBuilder] that can be passed to TextView.setText()
  */
-fun CharSequence.which(substring: String): IntRange {
-    return toString().let {
-        val start = it.indexOf(substring)
-        val end = it.lastIndexOf(substring)
-        IntRange(start, end)
-    }
-}
+fun String.enkompass(substring: String, vararg spans: Any) = toSpannable().enkompass(substring, *spans)
 
 /**
  * TODO setSpan's param `flags` is undocumented. fun.
- *
- * Set one or many Spans on a substring contained in the extended Spannable.
- * Will explode if substring does not exist.
  */
-fun SpannableStringBuilder.enkompass(substring: String, vararg spans: Any) = apply {
+fun SpannableStringBuilder.enkompass(substring: String, vararg spans: Any) {
     if (substring !in this) throw IllegalArgumentException("Substring not contained in the given String.")
     val range = this.which(substring)
     spans.forEach {

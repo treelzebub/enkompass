@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Typeface
 import android.support.annotation.ColorRes
 import android.support.annotation.StyleRes
-import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
@@ -17,8 +16,23 @@ import net.treelzebub.enkompass.spans.ClickSpan
 /**
  * Created by Tre Murillo on 4/5/17
  *
- * A collection of extensions for [Spannable] and [String]
+ * Quickly and easily style parts or all of Strings.
  */
+
+
+/**
+ * Feed it a substring and get the range of indices in the outer string.
+ *
+ * @param substring  a substring contained in the extended CharSequence. Will explode if
+ *                   substring does not exist.
+ */
+fun CharSequence.which(substring: String): IntRange {
+    return toString().let {
+        val start = it.indexOf(substring)
+        val end = it.lastIndexOf(substring)
+        IntRange(start, end)
+    }
+}
 
 fun String.toSpannable() = SpannableStringBuilder(this)
 
@@ -30,7 +44,7 @@ fun SpannableStringBuilder.normal(substring: String) = enkompass(substring, Styl
 
 fun SpannableStringBuilder.bold(substring: String) = enkompass(substring, StyleSpan(Typeface.BOLD))
 
-fun SpannableStringBuilder.italics(substring: String) = enkompass(substring, StyleSpan(Typeface.ITALIC))
+fun SpannableStringBuilder.italic(substring: String) = enkompass(substring, StyleSpan(Typeface.ITALIC))
 
 fun SpannableStringBuilder.boldItalic(substring: String) = enkompass(substring, StyleSpan(Typeface.BOLD_ITALIC))
 
