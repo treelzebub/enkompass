@@ -37,14 +37,13 @@ import net.treelzebub.enkompass.spans.ClickSpan
 object Examples {
 
     // Span various parts of a single String in one go.
-    fun builderPattern(): Spannable {
+    fun builderPattern(): CharSequence {
         val body = "My very long text sequence with lots of links and bold and italics and stuff"
-        body.toSpannable()
-            .bold("bold")
-            .italics("italics")
-            .monospace("and stuff")
-            .build()
-
+        return body.toSpannable()
+                   .bold("bold")
+                   .italics("italics")
+                   .monospace("and stuff")
+                   .build()
     }
 
     // This one spans the entire text, but you can do it with a substring, too.
