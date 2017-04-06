@@ -20,7 +20,7 @@ fun String.enkompass(substring: String, vararg spans: Any) = toSpannable().enkom
 /**
  * TODO setSpan's param `flags` is undocumented. fun.
  */
-fun SpannableStringBuilder.enkompass(substring: String, vararg spans: Any) {
+fun SpannableStringBuilder.enkompass(substring: String, vararg spans: Any) = apply {
     if (substring !in this) throw IllegalArgumentException("Substring not contained in the given String.")
     val range = this.which(substring)
     spans.forEach {
