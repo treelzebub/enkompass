@@ -23,8 +23,8 @@ class MainActivity : AppCompatActivity() {
 //        kbuilderSpans()
     }
 
+    // Span various parts of a single String in one go.
     private fun builderSpans() {
-        // Span various parts of a single String in one go.
         val body = "My text in bold and italics and with clickable words."
         val span = body.toSpannable()
                        .clickable("with clickable words") {
@@ -38,8 +38,8 @@ class MainActivity : AppCompatActivity() {
         textView.text = span
     }
 
+    // This one spans the entire text, but you can do it with a substring, too.
     private fun varargSpans() {
-        // This one spans the entire text, but you can do it with a substring, too.
         val body = "One Bold Link."
         body.enkompassAll(
                     ForegroundColorSpan(R.color.colorAccent),

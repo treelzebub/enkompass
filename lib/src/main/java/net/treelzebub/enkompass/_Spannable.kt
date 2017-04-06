@@ -36,24 +36,26 @@ fun CharSequence.which(substring: String): IntRange {
 
 fun String.toSpannable() = SpannableStringBuilder(this)
 
-fun SpannableStringBuilder.style(c: Context, substring: String, @StyleRes style: Int) = apply {
-    enkompass(substring, TextAppearanceSpan(c, style))
-}
+fun SpannableStringBuilder.style(c: Context, substring: String, @StyleRes style: Int)
+        = enkompass(substring, TextAppearanceSpan(c, style))
 
-fun SpannableStringBuilder.normal(substring: String) = enkompass(substring, StyleSpan(Typeface.NORMAL))
+fun SpannableStringBuilder.normal(substring: String)
+        = enkompass(substring, StyleSpan(Typeface.NORMAL))
 
-fun SpannableStringBuilder.bold(substring: String) = enkompass(substring, StyleSpan(Typeface.BOLD))
+fun SpannableStringBuilder.bold(substring: String)
+        = enkompass(substring, StyleSpan(Typeface.BOLD))
 
-fun SpannableStringBuilder.italic(substring: String) = enkompass(substring, StyleSpan(Typeface.ITALIC))
+fun SpannableStringBuilder.italic(substring: String)
+        = enkompass(substring, StyleSpan(Typeface.ITALIC))
 
-fun SpannableStringBuilder.boldItalic(substring: String) = enkompass(substring, StyleSpan(Typeface.BOLD_ITALIC))
+fun SpannableStringBuilder.boldItalic(substring: String)
+        = enkompass(substring, StyleSpan(Typeface.BOLD_ITALIC))
 
-fun SpannableStringBuilder.monospace(substring: String) = enkompass(substring, TypefaceSpan("monospace"))
+fun SpannableStringBuilder.monospace(substring: String)
+        = enkompass(substring, TypefaceSpan("monospace"))
 
-fun SpannableStringBuilder.colorize(substring: String, @ColorRes color: Int) {
-    enkompass(substring, ForegroundColorSpan(color))
-}
+fun SpannableStringBuilder.colorize(substring: String, @ColorRes color: Int)
+        = enkompass(substring, ForegroundColorSpan(color))
 
-fun SpannableStringBuilder.clickable(substring: String, click: (View) -> Unit) = apply {
-    enkompass(substring, ClickSpan(click))
-}
+fun SpannableStringBuilder.clickable(substring: String, click: (View) -> Unit)
+        = enkompass(substring, ClickSpan(click))
