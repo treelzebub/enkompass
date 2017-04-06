@@ -20,50 +20,6 @@ import net.treelzebub.enkompass.spans.ClickSpan
  * A collection of extensions for [Spannable] and [String]
  */
 
-//  TODO
-//    fun styleSomeShit() {
-//        val body = getString(R.string.i_have_just_one_stylistic_side))
-//        val span = body.toSpannable()
-//                       .enkompass(R.string.substring_one_stylistic) {
-//                            style = R.style.MyStyle
-//                            typeface = Typeface.Bold
-//                            color = R.color.orange
-//                            onClick = { // do some shit }
-//                        }
-//        textView.setText(span)
-//    }
-
-
-object Examples {
-
-    // Span various parts of a single String in one go.
-    fun builderPattern(): CharSequence {
-        val body = "My very long text sequence with a link and bold and italics and stuff"
-        return body.toSpannable()
-                   .clickable("link") {
-                       // open a web page or whatever.
-                   }
-                   .bold("bold")
-                   .italics("italics")
-                   .monospace("and stuff")
-                   .build()
-    }
-
-    // This one spans the entire text, but you can do it with a substring, too.
-    fun varargSpans() {
-        val body = "One Bold Link."
-        body.toSpannable()
-            .enkompassAll(
-                    StyleSpan(Typeface.BOLD),
-                    ClickSpan {
-                        view ->
-                        // Sets an OnClickListener.
-                        // Do stuff with the View, or startActivity(), or something else...
-                    })
-            .build()
-    }
-}
-
 fun String.toSpannable() = SpannableStringBuilder(this)
 
 fun SpannableStringBuilder.style(c: Context, @StyleRes style: Int, substring: String) = apply {
