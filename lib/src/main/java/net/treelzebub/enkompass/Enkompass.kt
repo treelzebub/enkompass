@@ -1,0 +1,60 @@
+package net.treelzebub.enkompass
+
+import android.content.Context
+import android.support.annotation.StringRes
+import android.text.SpannableStringBuilder
+
+/**
+ * Created by Tre Murillo on 4/5/17
+ */
+
+
+/**
+ * TODO setSpan's param `flags` is undocumented. fun.
+ *
+ * Set one or many Spans on a substring contained in the extended Spannable.
+ * Will explode if substring does not exist.
+ */
+fun SpannableStringBuilder.enkompass(substring: String, vararg spans: Any) = apply {
+    if (substring !in this) throw IllegalArgumentException("Substring not contained in the given String.")
+    val range = this.which(substring)
+    spans.forEach {
+        setSpan(it, range.first, range.last, 0) // last param is flags. see TODO
+    }
+}
+
+/**
+ * Convenience for the above, with a String resource.
+ */
+fun SpannableStringBuilder.enkompass(c: Context, @StringRes substring: Int, vararg spans: Any) = apply {
+    enkompass(c.getString(substring), *spans)
+}
+
+/**
+ * Convenience for the above, but it spans the whole String.
+ */
+fun SpannableStringBuilder.enkompassAll(vararg spans: Any) = apply {
+    enkompass(toString(), *spans)
+}
+
+/**
+ * I provide this because Android has provided us with a construct that appears to be a Builder Pattern,
+ * but is nothing of the sort. That's what Enkompass is all about. Obviously, this call is optional,
+ * but I find it to be useful to the reader: a clear signal that this is a CharSequence that can be
+ * passed to TextView.setText()
+ */
+fun SpannableStringBuilder.build() = this
+
+/**
+ * Feed it a substring and get the range of indices in the outer string.
+ *
+ * @param substring  a substring contained in the extended CharSequence. Will explode if
+ *                   substring does not exist.
+ */
+fun CharSequence.which(substring: String): IntRange {
+    return toString().let {
+        val start = it.indexOf(substring)
+        val end = it.lastIndexOf(substring)
+        IntRange(start, end)
+    }
+}
