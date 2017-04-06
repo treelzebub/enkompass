@@ -41,16 +41,14 @@ class MainActivity : AppCompatActivity() {
     private fun varargSpans() {
         // This one spans the entire text, but you can do it with a substring, too.
         val body = "One Bold Link."
-        body.toSpannable()
-            .enkompassAll(
+        body.enkompassAll(
                     ForegroundColorSpan(R.color.colorAccent),
-                StyleSpan(Typeface.BOLD),
+                    StyleSpan(Typeface.BOLD),
                     ClickSpan {
                         view ->
                         // Sets an OnClickListener.
                         // Do stuff with the View, or startActivity(), or something else...
                     })
-            .build()
     }
 
     // TODO Styles a substring via kbuilder syntax
