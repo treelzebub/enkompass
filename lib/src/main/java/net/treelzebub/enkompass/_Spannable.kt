@@ -36,7 +36,7 @@ fun CharSequence.which(substring: String): IntRange {
 
 fun String.toSpannable() = SpannableStringBuilder(this)
 
-fun SpannableStringBuilder.style(c: Context, @StyleRes style: Int, substring: String) = apply {
+fun SpannableStringBuilder.style(c: Context, substring: String, @StyleRes style: Int) = apply {
     enkompass(substring, TextAppearanceSpan(c, style))
 }
 
