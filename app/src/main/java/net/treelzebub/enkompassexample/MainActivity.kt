@@ -55,13 +55,12 @@ class MainActivity : AppCompatActivity() {
     private fun kbuilderSpans() {
 //        val body = getString(R.string.spans_set_with_a_kbuilder))
 //        val span = body.enkompass(R.string.substring_kbuilder) {
-//            style = R.style.MyStyle
 //            typeface = Typeface.Bold
 //            color = R.color.orange
 //            onClick = {
-//                // do some shit }
+//                // do some shit
 //            }
-//            textView.setText(span)
+//            textView.text = span
 //        }
     }
 }
