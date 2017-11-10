@@ -1,1 +1,2 @@
-include ':app', ':lib'
+rootProject.name = 'root'
+include ':app', ':enkompass'
