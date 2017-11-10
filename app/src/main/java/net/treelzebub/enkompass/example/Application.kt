@@ -1,4 +1,4 @@
-package net.treelzebub.enkompassexample
+package net.treelzebub.enkompass.example
 
 import android.app.Application
 

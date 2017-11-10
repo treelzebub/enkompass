@@ -1,13 +1,15 @@
-package net.treelzebub.enkompassexample
+package net.treelzebub.enkompass.example
 
 import android.graphics.Typeface
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
-import android.widget.TextView
+import kotlinx.android.synthetic.main.activity_main.*
 import net.treelzebub.enkompass.*
 import net.treelzebub.enkompass.spans.ClickSpan
+import org.jetbrains.anko.toast
 
 /**
  * Created by Tre Murillo on 4/6/17
@@ -18,8 +20,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        builderSpans()
-//        varargSpans()
+        builderSpans()
+        varargSpans()
 //        kbuilderSpans()
     }
 
@@ -28,26 +30,24 @@ class MainActivity : AppCompatActivity() {
         val body = "My text in bold and italics and with clickable words."
         val span = body.toSpannable()
                        .clickable("with clickable words") {
-                           // do a thing when the user taps on this phrase.
+                           toast("Yay, Enkompass.")
                        }
                        .bold("bold")
                        .italic("italics")
                        .monospace("and stuff")
                        .build()
-        val textView = findViewById(R.id.textview) as TextView
-        textView.text = span
+        textview.text = span
     }
 
     // This one spans the entire text, but you can do it with a substring, too.
     private fun varargSpans() {
         val body = "One Bold Link."
         body.enkompassAll(
-                    ForegroundColorSpan(R.color.colorAccent),
+                    ForegroundColorSpan(ContextCompat.getColor(this,  R.color.colorAccent)),
                     StyleSpan(Typeface.BOLD),
                     ClickSpan {
                         view ->
-                        // Sets an OnClickListener.
-                        // Do stuff with the View, or startActivity(), or something else...
+                        toast("Yay, Enkopass.")
                     })
     }
 
