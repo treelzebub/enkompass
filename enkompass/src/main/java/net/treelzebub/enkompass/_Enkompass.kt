@@ -34,7 +34,10 @@ fun SpannableStringBuilder.boldItalic(substring: String)
 fun SpannableStringBuilder.monospace(substring: String)
         = enkompass(substring, TypefaceSpan("monospace"))
 
-fun SpannableStringBuilder.colorize(substring: String, @ColorRes color: Int)
+/**
+ * @param color is the resolved color resource.
+ */
+fun SpannableStringBuilder.colorize(substring: String, color: Int)
         = enkompass(substring, ForegroundColorSpan(color))
 
 fun SpannableStringBuilder.clickable(substring: String, click: (View) -> Unit)

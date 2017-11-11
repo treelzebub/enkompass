@@ -48,13 +48,3 @@ fun SpannableStringBuilder.enkompassAll(vararg spans: Any) = apply {
 fun String.enkompassAll(vararg spans: Any) = apply {
     enkompass(toString(), *spans)
 }
-
-/**
- * I provide this because Android has given us a construct that appears to be a Builder Pattern,
- * but is nothing of the sort. That's what Enkompass is all about. Obviously, this call is optional,
- * but I find it to be useful to the reader: a clear signal that this is a CharSequence that can be
- * passed to TextView.setText()
- *
- * TODO look into TextView.setSpannableFactory()
- */
-fun SpannableStringBuilder.build(): CharSequence = this

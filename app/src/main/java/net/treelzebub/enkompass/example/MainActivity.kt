@@ -27,15 +27,14 @@ class MainActivity : AppCompatActivity() {
 
     // Span various parts of a single String in one go.
     private fun builderSpans() {
-        val body = "My text in bold and italics and with clickable words."
+        val body = "My text in bold and italics and with clickable words and stuff."
         val span = body.toSpannable()
-                       .clickable("with clickable words") {
-                           toast("Yay, Enkompass.")
-                       }
-                       .bold("bold")
-                       .italic("italics")
-                       .monospace("and stuff")
-                       .build()
+                .bold("bold")
+                .italic("italics")
+                .clickable("with clickable words") {
+                    toast("Yay, Enkompass.")
+                }
+                .monospace("and stuff")
         textview.text = span
     }
 
