@@ -8,7 +8,18 @@ import kotlin.test.assertEquals
  */
 class BaseTests {
 
-    @Test fun testWhich() {
+    @Test fun test_substring_at_beginning() {
+        val outer = "i\'m at the beginning"
+        val inner = "i\'m"
+        val range = 0..3
+        assertEquals(range, outer.which(inner))
+    }
+
+    @Test fun test_substring_at_end() {
+        assert(true)
+    }
+
+    @Test fun test_substring_in_middle() {
         val outer = "What Is The Deal"
         val inner = "The"
         val range = 8..11
