@@ -7,6 +7,6 @@ A sane framework for Android Spannables
      bold()
      italic()
      clickable(textview) { foo() }
-     colorize(getColor(R.color.light_urple)
+     colorize(getColor(R.color.light_urple))
  }
 ```
