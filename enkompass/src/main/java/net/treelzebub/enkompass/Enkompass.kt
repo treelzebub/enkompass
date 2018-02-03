@@ -14,22 +14,34 @@ import android.widget.TextView
  * Created by Tre Murillo on 2/3/18
  */
 
-
 /**
- * For Java-style builders, use this.
+ * If you really want a more Java-style syntax, here ya go.
+ *
+ * Example:
+ *     "Enkompass me, bruh!".enkompass("me", StyleSpan(Typeface.BOLD))
  */
+
+
+fun String.enkompass(substring: String, vararg spans: Any) = toSpannable().enkompass(substring, *spans)
 fun SpannableStringBuilder.enkompass(substring: String, vararg spans: Any) = apply {
     if (substring !in this) throw IllegalArgumentException("Substring not contained in the given String.")
-    val range = this.which(substring)
+    val range = which(substring)
     spans.forEach {
-        log("${range.first} to ${range.last}")
         setSpan(it, range.first, range.last, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
     }
 }
 
 
 /**
- * For Kotlin-style builders, user this.
+ * Kotlin-style builder for applying various spans to one substring.
+ *
+ * Example:
+ *     "Typesafe builders are neat!".enkompass("neat!") {
+ *         bold()
+ *         italic()
+ *         clickable(textview) { foo() }
+ *         colorize(getColor(R.color.light_urple)
+ *     }
  */
 fun String.enkompass(substring: String, enkompass: Enkompass.() -> Unit): SpannableStringBuilder {
     return Enkompass(this, substring).apply(enkompass).result
@@ -39,17 +51,11 @@ fun String.enkompass(substring: String, enkompass: Enkompass.() -> Unit): Spanna
 /**
  * This is not intended to be used directly.
  */
+@Deprecated("I made you extension functions!")
 class Enkompass(string: String, private val substring: String) {
-
-    init {
-        log("new Enkompass")
-    }
 
     var result: SpannableStringBuilder = string.toSpannable()
         private set
-
-    private val spannable = string.toSpannable()
-    private val which = string.which(substring)
 
     fun bold() = result.enkompass(substring, StyleSpan(Typeface.BOLD))
 
