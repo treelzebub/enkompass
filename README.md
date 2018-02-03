@@ -1,5 +1,5 @@
 # Enkompass
-A sane framework for Android Spannables
+A sane way of working with Android Spannables
 
 ## Usage
 ```kotlin
