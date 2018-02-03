@@ -1,4 +1,4 @@
-package net.treelzebub.enkompassexample;
+package net.treelzebub.example;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
