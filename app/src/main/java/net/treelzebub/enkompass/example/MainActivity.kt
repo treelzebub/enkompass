@@ -1,4 +1,4 @@
-package net.treelzebub.enkompassexample
+package net.treelzebub.enkompass.example
 
 import android.graphics.Typeface
 import android.os.Bundle
@@ -8,6 +8,7 @@ import android.text.style.StyleSpan
 import android.widget.TextView
 import net.treelzebub.enkompass.*
 import net.treelzebub.enkompass.spans.ClickSpan
+import net.treelzebub.example.R
 
 /**
  * Created by Tre Murillo on 4/6/17

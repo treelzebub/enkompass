@@ -1,4 +1,4 @@
-package net.treelzebub.enkompassexample;
+package net.treelzebub.example;
 
 import org.junit.Test;
 
