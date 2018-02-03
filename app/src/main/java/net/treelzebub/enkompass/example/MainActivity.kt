@@ -5,13 +5,12 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.text.SpannableStringBuilder
-import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
-import android.widget.TextView
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import net.treelzebub.enkompass.*
+import net.treelzebub.enkompass.dsl.wrap
 import net.treelzebub.enkompass.spans.ClickSpan
 
 /**
@@ -27,6 +26,13 @@ class MainActivity : AppCompatActivity() {
         builderSpans()
 //        varargSpans()
 //        kbuilderSpans()
+
+
+        "TEST".wrap("ES") {
+            prepend()
+            append()
+            addSpaceAndAt()
+        }.apply { log(this) }
     }
 
     private fun regularAssSpans() {
@@ -40,11 +46,11 @@ class MainActivity : AppCompatActivity() {
     private fun builderSpans() {
         val body = "My text in bold and italics and with clickable words and stuff."
         val span = body.toSpannable()
-                       .clickable("with clickable words") {
+                       .clickable(textview, "with clickable words") {
                            // do a thing when the user taps on this phrase.
                        }
                        .bold("bold")
-                       .italic("italics")
+                       .italics("italics")
                        .monospace("and stuff")
                        .build()
         textview.text = span
@@ -70,7 +76,7 @@ class MainActivity : AppCompatActivity() {
 //            typeface = Typeface.Bold
 //            color = R.color.orange
 //            onClick = {
-//                // do some shit
+//                 do some shit
 //            }
 //            textView.text = span
 //        }

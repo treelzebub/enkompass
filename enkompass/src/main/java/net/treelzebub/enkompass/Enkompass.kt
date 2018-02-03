@@ -1,23 +1,23 @@
 package net.treelzebub.enkompass
 
 import android.content.Context
-import android.support.annotation.StringRes
+import android.graphics.Typeface
+import android.support.annotation.StyleRes
 import android.text.SpannableStringBuilder
 import android.text.Spanned
+import android.text.method.LinkMovementMethod
+import android.text.style.*
+import android.view.View
+import android.widget.TextView
 
 /**
- * Created by Tre Murillo on 4/5/17
+ * Created by Tre Murillo on 2/3/18
  */
 
 
 /**
- * Set one or many Spans on a substring contained in the extended String.
- * Will explode if substring does not exist.
- *
- * @return  a [SpannableStringBuilder] that can be passed to TextView.setText()
+ * For Java-style builders, use this.
  */
-fun String.enkompass(substring: String, vararg spans: Any) = toSpannable().enkompass(substring, *spans)
-
 fun SpannableStringBuilder.enkompass(substring: String, vararg spans: Any) = apply {
     if (substring !in this) throw IllegalArgumentException("Substring not contained in the given String.")
     val range = this.which(substring)
@@ -27,33 +27,67 @@ fun SpannableStringBuilder.enkompass(substring: String, vararg spans: Any) = app
     }
 }
 
-/**
- * Convenience for the above, with a String resource.
- */
-fun SpannableStringBuilder.enkompass(c: Context, @StringRes substring: Int, vararg spans: Any) = apply {
-    enkompass(c.getString(substring), *spans)
-}
 
 /**
- * Convenience for the above, but it spans the whole String.
+ * For Kotlin-style builders, user this.
  */
-fun SpannableStringBuilder.enkompassAll(vararg spans: Any) = apply {
-    enkompass(toString(), *spans)
+fun String.enkompass(substring: String, enkompass: Enkompass.() -> Unit): SpannableStringBuilder {
+    return Enkompass(this, substring).apply(enkompass).result
 }
 
-/**
- * Convenience for the above, but it spans the whole String.
- */
-fun String.enkompassAll(vararg spans: Any) = apply {
-    enkompass(toString(), *spans)
-}
 
 /**
- * I provide this because Android has given us a construct that appears to be a Builder Pattern,
- * but is nothing of the sort. That's what Enkompass is all about. Obviously, this call is optional,
- * but I find it to be useful to the reader: a clear signal that this is a CharSequence that can be
- * passed to TextView.setText()
+ * This is not intended to be used directly.
+ */
+class Enkompass(string: String, private val substring: String) {
+
+    init {
+        log("new Enkompass")
+    }
+
+    var result: SpannableStringBuilder = string.toSpannable()
+        private set
+
+    private val spannable = string.toSpannable()
+    private val which = string.which(substring)
+
+    fun bold() = result.enkompass(substring, StyleSpan(Typeface.BOLD))
+
+    fun italics() = result.enkompass(substring, StyleSpan(Typeface.ITALIC))
+
+    fun boldItalics() = result.enkompass(substring, StyleSpan(Typeface.BOLD_ITALIC))
+
+    fun monospace() = result.enkompass(substring, TypefaceSpan("monospace"))
+
+    fun withStyle(context: Context, @StyleRes style: Int)
+            = result.enkompass(substring, TextAppearanceSpan(context, style))
+
+    fun colorize(resolvedColor: Int) = result.enkompass(substring, ForegroundColorSpan(resolvedColor))
+
+    fun clickable(
+            textview: TextView,
+            movementMethod: LinkMovementMethod? = null,
+            click: (View) -> Unit)
+    {
+        textview.movementMethod = movementMethod ?: LinkMovementMethod()
+        result.enkompass(substring, object : ClickableSpan() {
+            override fun onClick(widget: View) = click(widget)
+        })
+    }
+}
+
+
+private fun String.toSpannable() = SpannableStringBuilder(this)
+
+/**
+ * Feed it a substring and get the range of indices in the outer string. Enkompass uses
+ * [Spanned.SPAN_INCLUSIVE_INCLUSIVE] under the hood.
  *
- * TODO look into TextView.setSpannableFactory()
+ * @param substring  a substring contained in the extended CharSequence. Will explode if
+ *                   substring does not exist.
  */
-fun SpannableStringBuilder.build(): CharSequence = this
+private fun CharSequence.which(substring: String): IntRange {
+    val start = indexOf(substring)
+    val end = start + substring.length
+    return start..end
+}
