@@ -3,6 +3,7 @@ package net.treelzebub.enkompass
 import android.content.Context
 import android.support.annotation.StringRes
 import android.text.SpannableStringBuilder
+import android.text.Spanned
 
 /**
  * Created by Tre Murillo on 4/5/17
@@ -17,14 +18,12 @@ import android.text.SpannableStringBuilder
  */
 fun String.enkompass(substring: String, vararg spans: Any) = toSpannable().enkompass(substring, *spans)
 
-/**
- * TODO setSpan's param `flags` is undocumented. fun.
- */
 fun SpannableStringBuilder.enkompass(substring: String, vararg spans: Any) = apply {
     if (substring !in this) throw IllegalArgumentException("Substring not contained in the given String.")
     val range = this.which(substring)
     spans.forEach {
-        setSpan(it, range.first, range.last, 0) // last param is flags. see TODO
+        log("${range.first} to ${range.last}")
+        setSpan(it, range.first, range.last, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
     }
 }
 

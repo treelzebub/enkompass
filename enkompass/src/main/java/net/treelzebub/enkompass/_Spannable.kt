@@ -17,7 +17,7 @@ import android.text.SpannableStringBuilder
 fun CharSequence.which(substring: String): IntRange {
     return toString().let {
         val start = it.indexOf(substring)
-        val end = it.lastIndexOf(substring)
+        val end = start + substring.length
         start..end
     }
 }
