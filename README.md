@@ -3,7 +3,7 @@ A sane way of working with Android Spannables
 
 ## Usage
 ```kotlin
-"Typesafe builders are neat!".enkompass("neat!") {
+"Kotlin builders are neat!".enkompass("neat!") {
      bold()
      italic()
      clickable(textview) { foo() }
