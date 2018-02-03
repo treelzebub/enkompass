@@ -40,7 +40,7 @@ fun SpannableStringBuilder.enkompass(substring: String, vararg spans: Any) = app
  *         bold()
  *         italic()
  *         clickable(textview) { foo() }
- *         colorize(getColor(R.color.light_urple)
+ *         colorize(getColor(R.color.light_urple))
  *     }
  */
 fun String.enkompass(substring: String, enkompass: Enkompass.() -> Unit): SpannableStringBuilder {
