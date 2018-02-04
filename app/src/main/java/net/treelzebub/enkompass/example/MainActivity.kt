@@ -24,5 +24,9 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this@MainActivity, "Boop!", Toast.LENGTH_SHORT).show()
             }
         }
+
+        textview.text = string.enkompass(2..4) {
+
+        }
     }
 }
