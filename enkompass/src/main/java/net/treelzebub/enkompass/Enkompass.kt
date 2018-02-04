@@ -1,8 +1,10 @@
 package net.treelzebub.enkompass
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Typeface
 import android.support.annotation.StyleRes
+import android.support.annotation.VisibleForTesting
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
@@ -17,11 +19,15 @@ import android.widget.TextView
 /**
  * If you really want a more Java-style syntax, here ya go.
  *
+ * @param String (the extended class) The complete string, some or all of which will have spannables applied.
+ * @param substring The part of the String you want to apply spannables to.
+ * @param spans A vararg array of one or more spannable objects.
+ *
+ *
  * Example:
  *     "Enkompass me, bruh!".enkompass("me", StyleSpan(Typeface.BOLD))
  */
-
-
+@SuppressLint("VisibleForTests")
 fun String.enkompass(substring: String, vararg spans: Any) = toSpannable().enkompass(substring, *spans)
 fun SpannableStringBuilder.enkompass(substring: String, vararg spans: Any) = apply {
     if (substring !in this) throw IllegalArgumentException("Substring not contained in the given String.")
@@ -34,14 +40,18 @@ fun SpannableStringBuilder.enkompass(substring: String, vararg spans: Any) = app
 
 /**
  * Kotlin-style builder for applying various spans to one substring.
- *
  * Example:
- *     "Typesafe builders are neat!".enkompass("neat!") {
- *         bold()
- *         italic()
+ *     "Woohoo!".enkompass("hoo!") {
+ *         boldItalics()
  *         clickable(textview) { foo() }
  *         colorize(getColor(R.color.light_urple))
  *     }
+ *
+ * @param String (the extended class) The complete string, some or all of which will have spannables applied.
+ * @param substring The part of the String you want to apply spannables to.
+ * @param enkompass Any function of the [Enkompass] class. This lambda applies spannables to the [substring].
+ *
+ * @return The resulting [SpannableStringBuilder], with the applied spannables.
  */
 fun String.enkompass(substring: String, enkompass: Enkompass.() -> Unit): SpannableStringBuilder {
     return Enkompass(this, substring).apply(enkompass).result
@@ -82,17 +92,11 @@ class Enkompass(string: String, private val substring: String) {
     }
 }
 
+@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+fun String.toSpannable() = SpannableStringBuilder(this)
 
-private fun String.toSpannable() = SpannableStringBuilder(this)
-
-/**
- * Feed it a substring and get the range of indices in the outer string. Enkompass uses
- * [Spanned.SPAN_INCLUSIVE_INCLUSIVE] under the hood.
- *
- * @param substring  a substring contained in the extended CharSequence. Will explode if
- *                   substring does not exist.
- */
-private fun CharSequence.which(substring: String): IntRange {
+@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+fun CharSequence.which(substring: String): IntRange {
     val start = indexOf(substring)
     val end = start + substring.length
     return start..end

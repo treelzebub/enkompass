@@ -2,16 +2,15 @@ package net.treelzebub.enkompass
 
 import android.graphics.Typeface
 import android.text.style.StyleSpan
-import android.widget.TextView
-import net.treelzebub.enkompass.dsl.enkompass
+import junit.framework.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 @RunWith(RobolectricTestRunner::class)
-class EnkompassTests {
+class EnkompassJunitTests {
 
     @Test
     fun which() {
@@ -35,19 +34,18 @@ class EnkompassTests {
         assertEquals(which.last, span.getSpanEnd(bold))
     }
 
+    @Test fun equality() {
+        val str = "Test string"
+        val sub = "string"
+        val spannable = str.enkompass(sub)
+
+        Assert.assertEquals(str, spannable.toString())
+    }
+
     @Test
-    fun dsl() {
-        val str = "asdfasdfasdf"
-        val sub = "asdf"
-
-        val textview = TextView(RuntimeEnvironment.application)
-
-        str.enkompass(sub) {
-            bold(it)
-            italics(it)
-            boldItalics(it)
-            clickable(textview, it) {}
-        }
-
+    fun throws() {
+        val str = "test string"
+        val sub = "i'm not in the test string."
+        assertFailsWith<IllegalArgumentException> { str.enkompass(sub) }
     }
 }
