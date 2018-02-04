@@ -23,6 +23,8 @@ class MainActivity : AppCompatActivity() {
         textview_string.text = string.enkompass(substring) {
             bold()
             italics()
+            foregroundColor(resources.getColor(android.R.color.white))
+            backgroundColor(resources.getColor(android.R.color.black))
             clickable(textview_string) {
                 Toast.makeText(this@MainActivity, "Boop!", Toast.LENGTH_SHORT).show()
             }

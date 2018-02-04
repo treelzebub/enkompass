@@ -20,33 +20,12 @@ import android.widget.TextView
 
 
 /**
- * This function is where the actual work of the library happens. Feed it an
- *
- * @param[String] [the extended class] The complete string, some or all of which will have spannables applied.
- * @param[intRange] The start and end of the desired spans. Corresponds to [Spanned.SPAN_INCLUSIVE_INCLUSIVE].
- * @param[spans] A vararg array of one or more spannable objects.
- */
-fun CharSequence.enkompass(strategy: Enkompass.Strategy, vararg spans: Any): Spannable {
-    val substring = substring(strategy.range.let { it.first until it.last })
-    if (substring !in this) {
-        throw IllegalArgumentException("Substring not contained in the given String.")
-    }
-
-    val spannable = this as? Spannable ?: SpannableString(this)
-    spans.forEach {
-        spannable.setSpan(it, strategy.range.first, strategy.range.last, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
-    }
-    return spannable
-}
-
-
-/**
  * Kotlin-style builder for applying various spans to one substring.
  * Example:
  *     "Woohoo!".enkompass("hoo!") {
  *         boldItalics()
  *         clickable(textview) { foo() }
- *         colorize(getColor(R.color.light_urple))
+ *         foregroundColor(getColor(R.color.light_urple))
  *     }
  *
  * @param[String] (the extended class) The complete string, some or all of which will have s
@@ -67,6 +46,7 @@ fun String.enkompass(intRange: IntRange, enkompass: Enkompass.() -> Unit)
 /**
  * This is not intended to be used directly.
  */
+@SuppressLint("VisibleForTests")
 @Deprecated("I made you extension functions!")
 class Enkompass(string: String, private val strategy: Strategy) : SpannableString(string) {
 
@@ -75,7 +55,6 @@ class Enkompass(string: String, private val strategy: Strategy) : SpannableStrin
     }
 
     class SubstringStrategy(string: String, substring: String) : Strategy {
-        @SuppressLint("VisibleForTests")
         override val range = string.which(substring)
     }
 
@@ -93,24 +72,39 @@ class Enkompass(string: String, private val strategy: Strategy) : SpannableStrin
     fun style(context: Context, @StyleRes style: Int)
             = apply { enkompass(strategy, TextAppearanceSpan(context, style)) }
 
-    fun colorize(resolvedColor: Int)
+    fun foregroundColor(resolvedColor: Int)
             = apply { enkompass(strategy, ForegroundColorSpan(resolvedColor)) }
+
+    fun backgroundColor(resolvedColor: Int)
+            = apply { enkompass(strategy, BackgroundColorSpan(resolvedColor)) }
 
     fun clickable(
             textview: TextView,
-            movementMethod: LinkMovementMethod? = null,
+            movementMethod: LinkMovementMethod? = LinkMovementMethod(),
             click: (View) -> Unit
     ) = apply {
-        textview.movementMethod = movementMethod ?: LinkMovementMethod()
+        textview.movementMethod = movementMethod
         enkompass(strategy, object : ClickableSpan() {
             override fun onClick(widget: View) = click(widget)
         })
     }
+
+
 }
 
-
 @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-fun String.toSpannable() = SpannableStringBuilder(this)
+fun CharSequence.enkompass(strategy: Enkompass.Strategy, vararg spans: Any): Spannable {
+    val substring = substring(strategy.range.let { it.first until it.last })
+    if (substring !in this) {
+        throw IllegalArgumentException("Substring not contained in the given String.")
+    }
+
+    val spannable = this as? Spannable ?: SpannableString(this)
+    spans.forEach {
+        spannable.setSpan(it, strategy.range.first, strategy.range.last, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+    }
+    return spannable
+}
 
 @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
 fun CharSequence.which(substring: String): IntRange {

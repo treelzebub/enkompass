@@ -1,13 +1,14 @@
 package net.treelzebub.example
 
-import android.graphics.Typeface
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
+import android.support.v4.content.ContextCompat
 import android.text.Spannable
+import android.text.style.BackgroundColorSpan
 import android.text.style.ClickableSpan
-import android.text.style.StyleSpan
-import android.text.style.TypefaceSpan
+import android.text.style.ForegroundColorSpan
 import android.widget.TextView
+import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertTrue
 import net.treelzebub.enkompass.enkompass
 import net.treelzebub.enkompass.example.MainActivity
@@ -24,36 +25,47 @@ class Integration {
     @get:Rule
     val activityRule = ActivityTestRule(MainActivity::class.java)
 
-    @Test
-    fun dsl() {
+    val textview: TextView
+        get() = activityRule.activity.findViewById<TextView>(R.id.textview_string)!!
 
-        val textview = activityRule.activity.findViewById<TextView>(R.id.textview)!!
-        val bold = StyleSpan(Typeface.BOLD).wrap()
-        val italics = StyleSpan(Typeface.ITALIC).wrap()
-        val boldItalics = StyleSpan(Typeface.BOLD_ITALIC).wrap()
-        val monospace = TypefaceSpan("monospace").wrap()
-
-        var flag = false
-
+    @Test fun clickable() {
         val str = "Test string"
         val sub = "string"
-        val spannable = str.enkompass(sub) {
-            bold()
-            italics()
-            boldItalics()
-            monospace()
-            clickable(textview) { flag = true }
-        }
 
-        val all = str.which(sub).let { spannable.getSpans(it.first, it.last, Any::class.java) }
-        assertTrue(bold in all)
-        assertTrue(italics in all)
-        assertTrue(boldItalics in all)
-        assertTrue(monospace in all)
+        var flag = false
+        val spannable = str.enkompass(sub) {
+            clickable(textview) { flag = true}
+        }
 
         val clickable = spannable.findSpan<ClickableSpan>(sub)
         clickable.onClick(textview)
         assertTrue(flag)
+    }
+
+    @Test fun foregroundColor() {
+        val str = "Gabba gabba hey"
+        val sub = "hey"
+        val black = ContextCompat.getColor(activityRule.activity, android.R.color.black)
+
+        val spannable = str.enkompass(sub) {
+            foregroundColor(black)
+        }
+
+        val span = spannable.findSpan<ForegroundColorSpan>(sub)
+        assertEquals(black, span.foregroundColor)
+    }
+
+    @Test fun backgroundColor() {
+        val str = "Gabba gabba hey"
+        val sub = "hey"
+        val black = ContextCompat.getColor(activityRule.activity, android.R.color.black)
+
+        val spannable = str.enkompass(sub) {
+            backgroundColor(black)
+        }
+
+        val span = spannable.findSpan<BackgroundColorSpan>(sub)
+        assertEquals(black, span.backgroundColor)
     }
 
     private inline fun <reified Span : Any> Spannable.findSpan(substring: String): Span {
@@ -63,14 +75,3 @@ class Integration {
     }
 }
 
-private fun StyleSpan.wrap() = StyleWrapper(this)
-private class StyleWrapper(private val style: StyleSpan) : StyleSpan(style.style) {
-    override fun equals(other: Any?) = other is StyleSpan && style.style == other.style
-    override fun hashCode() = style.hashCode()
-}
-
-private fun TypefaceSpan.wrap() = TypefaceWrapper(this)
-private class TypefaceWrapper(private val typeface: TypefaceSpan) : TypefaceSpan(typeface.family) {
-    override fun equals(other: Any?) = other is TypefaceSpan && typeface.family == other.family
-    override fun hashCode() = typeface.hashCode()
-}
