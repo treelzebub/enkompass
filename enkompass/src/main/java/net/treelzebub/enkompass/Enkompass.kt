@@ -27,15 +27,22 @@ import android.widget.TextView
  * Example:
  *     "Enkompass me, bruh!".enkompass("me", StyleSpan(Typeface.BOLD))
  */
-@SuppressLint("VisibleForTests")
-fun String.enkompass(substring: String, vararg spans: Any) = toSpannable().enkompass(substring, *spans)
 fun SpannableStringBuilder.enkompass(substring: String, vararg spans: Any) = apply {
-    if (substring !in this) throw IllegalArgumentException("Substring not contained in the given String.")
+    if (substring !in this) {
+        throw IllegalArgumentException("Substring not contained in the given String.")
+    }
     val range = which(substring)
     spans.forEach {
         setSpan(it, range.first, range.last, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
     }
 }
+
+/**
+ * String convenience, so you don't need to create your own [SpannableStringBuilder].
+ */
+@SuppressLint("VisibleForTests")
+fun String.enkompass(substring: String, vararg spans: Any)
+        = toSpannable().enkompass(substring, *spans)
 
 
 /**
@@ -47,14 +54,16 @@ fun SpannableStringBuilder.enkompass(substring: String, vararg spans: Any) = app
  *         colorize(getColor(R.color.light_urple))
  *     }
  *
- * @param String (the extended class) The complete string, some or all of which will have spannables applied.
+ * @param String (the extended class) The complete string, some or all of which will have s
+ *                pannables applied.
  * @param substring The part of the String you want to apply spannables to.
- * @param enkompass Any function of the [Enkompass] class. This lambda applies spannables to the [substring].
+ * @param enkompass Any function of the [Enkompass] class. This lambda applies spannables to
+ *                  the [substring].
  *
  * @return The resulting [SpannableStringBuilder], with the applied spannables.
  */
 fun String.enkompass(substring: String, enkompass: Enkompass.() -> Unit): SpannableStringBuilder {
-    return Enkompass(this, substring).apply(enkompass).result
+    return Enkompass(this, substring).apply(enkompass)
 }
 
 
@@ -62,31 +71,29 @@ fun String.enkompass(substring: String, enkompass: Enkompass.() -> Unit): Spanna
  * This is not intended to be used directly.
  */
 @Deprecated("I made you extension functions!")
-class Enkompass(string: String, private val substring: String) {
+class Enkompass(string: String, private val substring: String) : SpannableStringBuilder(string) {
 
-    var result: SpannableStringBuilder = string.toSpannable()
-        private set
+    fun bold() = apply { enkompass(substring, StyleSpan(Typeface.BOLD)) }
 
-    fun bold() = result.enkompass(substring, StyleSpan(Typeface.BOLD))
+    fun italics() = apply { enkompass(substring, StyleSpan(Typeface.ITALIC)) }
 
-    fun italics() = result.enkompass(substring, StyleSpan(Typeface.ITALIC))
+    fun boldItalics() = apply { enkompass(substring, StyleSpan(Typeface.BOLD_ITALIC)) }
 
-    fun boldItalics() = result.enkompass(substring, StyleSpan(Typeface.BOLD_ITALIC))
+    fun monospace() = apply { enkompass(substring, TypefaceSpan("monospace")) }
 
-    fun monospace() = result.enkompass(substring, TypefaceSpan("monospace"))
+    fun style(context: Context, @StyleRes style: Int)
+            = apply { enkompass(substring, TextAppearanceSpan(context, style)) }
 
-    fun withStyle(context: Context, @StyleRes style: Int)
-            = result.enkompass(substring, TextAppearanceSpan(context, style))
-
-    fun colorize(resolvedColor: Int) = result.enkompass(substring, ForegroundColorSpan(resolvedColor))
+    fun colorize(resolvedColor: Int)
+            = apply { enkompass(substring, ForegroundColorSpan(resolvedColor)) }
 
     fun clickable(
             textview: TextView,
             movementMethod: LinkMovementMethod? = null,
             click: (View) -> Unit)
-    {
+    = apply {
         textview.movementMethod = movementMethod ?: LinkMovementMethod()
-        result.enkompass(substring, object : ClickableSpan() {
+        enkompass(substring, object : ClickableSpan() {
             override fun onClick(widget: View) = click(widget)
         })
     }
