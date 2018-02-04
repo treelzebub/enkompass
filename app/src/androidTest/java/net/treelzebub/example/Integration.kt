@@ -7,6 +7,7 @@ import android.text.Spannable
 import android.text.style.BackgroundColorSpan
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
+import android.text.style.ImageSpan
 import android.widget.TextView
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertTrue
@@ -66,6 +67,25 @@ class Integration {
 
         val span = spannable.findSpan<BackgroundColorSpan>(sub)
         assertEquals(black, span.backgroundColor)
+    }
+
+    @Test fun image() {
+        val str = "i'm hungry"
+        val sub = "hungry"
+        val drawable = activityRule.activity.getDrawable(android.R.drawable.ic_dialog_info)
+
+        val spannable = str.enkompass(sub) {
+            image(drawable, true)
+        }
+
+        val span = spannable.findSpan<ImageSpan>(sub)
+
+        assertEquals(drawable, span.drawable)
+        assertEquals(ImageSpan.ALIGN_BASELINE, span.verticalAlignment)
+    }
+
+    @Test fun custom() {
+
     }
 
     private inline fun <reified Span : Any> Spannable.findSpan(substring: String): Span {

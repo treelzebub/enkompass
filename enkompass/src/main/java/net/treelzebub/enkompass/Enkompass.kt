@@ -3,6 +3,7 @@ package net.treelzebub.enkompass
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Typeface
+import android.graphics.drawable.Drawable
 import android.support.annotation.StyleRes
 import android.support.annotation.VisibleForTesting
 import android.text.Spannable
@@ -89,7 +90,12 @@ class Enkompass(string: String, private val strategy: Strategy) : SpannableStrin
         })
     }
 
+    fun image(drawable: Drawable, alignBaseline: Boolean) = apply {
+        val alignment = if (alignBaseline) ImageSpan.ALIGN_BASELINE else ImageSpan.ALIGN_BOTTOM
+        enkompass(strategy, ImageSpan(drawable, alignment))
+    }
 
+    fun custom(spans: () -> Any) = enkompass(strategy, spans())
 }
 
 @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
