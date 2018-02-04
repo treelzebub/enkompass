@@ -20,44 +20,41 @@ import android.widget.TextView
 
 
 /**
- * This is where the actual
+ * This function is where the actual work of the library happens. Feed it an
  *
- * @param String (the extended class) The complete string, some or all of which will have spannables applied.
- * @param substring The part of the String you want to apply spannables to.
- * @param spans A vararg array of one or more spannable objects.
+ * @param[String] [the extended class] The complete string, some or all of which will have spannables applied.
+ * @param[intRange] The start and end of the desired spans. Corresponds to [Spanned.SPAN_INCLUSIVE_INCLUSIVE].
+ * @param[spans] A vararg array of one or more spannable objects.
  */
-fun CharSequence.enkompass(
-        substring: String,
-        vararg spans: Any,
-        strategy: Enkompass.Strategy = Enkompass.SubstringStrategy(this.toString())
-) = apply {
+fun CharSequence.enkompass(strategy: Enkompass.Strategy, vararg spans: Any): Spannable {
+    val substring = substring(strategy.range.let { it.first until it.last })
     if (substring !in this) {
         throw IllegalArgumentException("Substring not contained in the given String.")
     }
 
-    val spannable = this as? Spannable ?: SpannableString(this)
-    val range = strategy.getRange(substring)
+    val spannable = this as? Spannable ?: SpannableStringBuilder(this)
     spans.forEach {
-        spannable.setSpan(it, range.first, range.last, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+        spannable.setSpan(it, strategy.range.first, strategy.range.last, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
     }
+    return spannable
 }
 
-fun CharSequence.enkompass(
-        intRange: IntRange,
-        vararg spans: Any,
-        strategy: Enkompass.Strategy = Enkompass.RangeStrategy(intRange)
-) = apply { enkompass(substring(intRange), spans, strategy) }
+@SuppressLint("VisibleForTests")
+fun CharSequence.enkompass(substring: String, vararg spans: Any): Spannable {
+    if (substring !in this) {
+        throw IllegalArgumentException("Substring not contained in the given String.")
+    }
+    return enkompass(Enkompass.SubstringStrategy(this.toString(), substring), spans)
+}
+
 
 /**
  * If your substring occurs more than once in the outer string, you'll want to use this signature,
  * which takes an [IntRange] that corresponds to [Spanned.SPAN_INCLUSIVE_INCLUSIVE].
  */
 @SuppressLint("VisibleForTests")
-fun String.enkompass(
-        intRange: IntRange,
-        strategy: Enkompass.Strategy = Enkompass.RangeStrategy(intRange),
-        vararg spans: Any
-) = toSpannable().enkompass(intRange, strategy, spans)
+fun String.enkompass(intRange: IntRange, vararg spans: Any)
+        = toSpannable().enkompass(Enkompass.RangeStrategy(intRange), spans)
 
 /**
  * Kotlin-style builder for applying various spans to one substring.
@@ -68,72 +65,60 @@ fun String.enkompass(
  *         colorize(getColor(R.color.light_urple))
  *     }
  *
- * @param String (the extended class) The complete string, some or all of which will have s
+ * @param[String] (the extended class) The complete string, some or all of which will have s
  *                pannables applied.
- * @param substring The part of the String you want to apply spannables to.
- * @param enkompass Any function of the [Enkompass] class. This lambda applies spannables to
+ * @param[substring] The part of the String you want to apply spannables to.
+ * @param[enkompass] Any function of the [Enkompass] class. This lambda applies spannables to
  *                  the [substring].
  *
  * @return The resulting [SpannableStringBuilder], with the applied spannables.
  */
-fun String.enkompass(
-        substring: String,
-        strategy: Enkompass.Strategy = Enkompass.SubstringStrategy(this),
-        enkompass: Enkompass.() -> Unit
-) = Enkompass(this, substring, strategy).apply(enkompass)
+fun String.enkompass(substring: String, enkompass: Enkompass.() -> Unit)
+        = Enkompass(this, Enkompass.SubstringStrategy(this, substring)).apply(enkompass)
 
-fun String.enkompass(
-        intRange: IntRange,
-        strategy: Enkompass.Strategy = Enkompass.SubstringStrategy(this),
-        enkompass: Enkompass.() -> Unit
-) = Enkompass(this, intRange, strategy).apply(enkompass)
-
-
+fun String.enkompass(intRange: IntRange, enkompass: Enkompass.() -> Unit)
+        = Enkompass(this, Enkompass.RangeStrategy(intRange)).apply(enkompass)
 
 
 /**
  * This is not intended to be used directly.
  */
 @Deprecated("I made you extension functions!")
-class Enkompass(string: String, private val substring: String, val strategy: Strategy) : SpannableString(string) {
+class Enkompass(string: String, private val strategy: Strategy) : SpannableString(string) {
 
     interface Strategy {
-        fun getRange(substring: String): IntRange
+        val range: IntRange
     }
 
-    class SubstringStrategy(private val string: String) : Strategy {
+    class SubstringStrategy(string: String, substring: String) : Strategy {
         @SuppressLint("VisibleForTests")
-        override fun getRange(substring: String): IntRange {
-            return string.which(substring)
-        }
+        override val range = string.which(substring)
     }
 
-    class RangeStrategy(private val range: IntRange) : Strategy {
-        override fun getRange(substring: String) = range
-    }
+    class RangeStrategy(override val range: IntRange) : Strategy
 
-    fun bold() = apply { enkompass(substring, strategy, StyleSpan(Typeface.BOLD)) }
 
-    fun italics() = apply { enkompass(substring, strategy, StyleSpan(Typeface.ITALIC)) }
+    fun bold() = apply { enkompass(strategy, StyleSpan(Typeface.BOLD)) }
 
-    fun boldItalics() = apply { enkompass(substring, strategy, StyleSpan(Typeface.BOLD_ITALIC)) }
+    fun italics() = apply { enkompass(strategy, StyleSpan(Typeface.ITALIC)) }
 
-    fun monospace() = apply { enkompass(substring, strategy, TypefaceSpan("monospace")) }
+    fun boldItalics() = apply { enkompass(strategy, StyleSpan(Typeface.BOLD_ITALIC)) }
+
+    fun monospace() = apply { enkompass(strategy, TypefaceSpan("monospace")) }
 
     fun style(context: Context, @StyleRes style: Int)
-            = apply { enkompass(substring, strategy, TextAppearanceSpan(context, style)) }
+            = apply { enkompass(strategy, TextAppearanceSpan(context, style)) }
 
     fun colorize(resolvedColor: Int)
-            = apply { enkompass(substring, strategy, ForegroundColorSpan(resolvedColor)) }
+            = apply { enkompass(strategy, ForegroundColorSpan(resolvedColor)) }
 
     fun clickable(
             textview: TextView,
             movementMethod: LinkMovementMethod? = null,
-            strategy: Strategy = SubstringStrategy(this.toString()),
             click: (View) -> Unit
     ) = apply {
         textview.movementMethod = movementMethod ?: LinkMovementMethod()
-        enkompass(substring, strategy, object : ClickableSpan() {
+        enkompass(strategy, object : ClickableSpan() {
             override fun onClick(widget: View) = click(widget)
         })
     }

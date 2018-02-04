@@ -28,7 +28,7 @@ class EnkompassJunitTests {
         val which = str.which(sub)
 
         val span = str.toSpannable()
-        val bold = StyleSpan(Typeface.BOLD)
+        val bold = StyleSpan(Typeface.BOLD).wrap()
         span.enkompass(sub, bold)
 
         assertEquals(which.last, span.getSpanEnd(bold))
@@ -47,5 +47,11 @@ class EnkompassJunitTests {
         val str = "test string"
         val sub = "i'm not in the test string."
         assertFailsWith<IllegalArgumentException> { str.enkompass(sub) }
+    }
+
+    private fun StyleSpan.wrap() = StyleWrapper(this)
+    private class StyleWrapper(private val style: StyleSpan) : StyleSpan(style.style) {
+        override fun equals(other: Any?) = other is StyleSpan && style.style == other.style
+        override fun hashCode() = style.hashCode()
     }
 }

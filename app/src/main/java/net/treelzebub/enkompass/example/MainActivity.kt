@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         textview.text = string.enkompass(2..4) {
-
+            monospace()
         }
     }
 }
