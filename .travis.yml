@@ -1,4 +1,7 @@
 language: android
+sudo: required
+jdk: oraclejdk8
+
 android:
   components:
     - tools
@@ -27,3 +30,6 @@ android:
         - $HOME/.gradle/caches/
         - $HOME/.gradle/wrapper/
         - $HOME/.android/build-cache
+
+    script:
+    - "./gradlew clean build connectedCheck -PdisablePreDex --stacktrace"
