@@ -25,8 +25,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        textview.text = string.enkompass(2..4) {
-            monospace()
-        }
+//        // We can't use substring here because "Wow" occurs twice,
+//        // but we can use the IntRange signature.
+//        textview.text = "Wow Bob Wow.".enkompass(0 until 4) {
+//            bold()
+//            italics()
+//        }
     }
 }

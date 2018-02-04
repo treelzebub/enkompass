@@ -32,29 +32,13 @@ fun CharSequence.enkompass(strategy: Enkompass.Strategy, vararg spans: Any): Spa
         throw IllegalArgumentException("Substring not contained in the given String.")
     }
 
-    val spannable = this as? Spannable ?: SpannableStringBuilder(this)
+    val spannable = this as? Spannable ?: SpannableString(this)
     spans.forEach {
         spannable.setSpan(it, strategy.range.first, strategy.range.last, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
     }
     return spannable
 }
 
-@SuppressLint("VisibleForTests")
-fun CharSequence.enkompass(substring: String, vararg spans: Any): Spannable {
-    if (substring !in this) {
-        throw IllegalArgumentException("Substring not contained in the given String.")
-    }
-    return enkompass(Enkompass.SubstringStrategy(this.toString(), substring), spans)
-}
-
-
-/**
- * If your substring occurs more than once in the outer string, you'll want to use this signature,
- * which takes an [IntRange] that corresponds to [Spanned.SPAN_INCLUSIVE_INCLUSIVE].
- */
-@SuppressLint("VisibleForTests")
-fun String.enkompass(intRange: IntRange, vararg spans: Any)
-        = toSpannable().enkompass(Enkompass.RangeStrategy(intRange), spans)
 
 /**
  * Kotlin-style builder for applying various spans to one substring.
