@@ -78,6 +78,12 @@ class Enkompass(string: String, private val strategy: Strategy) : SpannableStrin
     fun monospace()
             = enkompass(strategy, TypefaceSpan("monospace"))
 
+    fun superscript()
+            = enkompass(strategy, SuperscriptSpan())
+
+    fun subscript()
+            = enkompass(strategy, SubscriptSpan())
+
     fun style(context: Context, @StyleRes style: Int)
             = enkompass(strategy, TextAppearanceSpan(context, style))
 
