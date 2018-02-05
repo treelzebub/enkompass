@@ -11,6 +11,7 @@ import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
+import android.text.method.MovementMethod
 import android.text.style.*
 import android.view.View
 import android.widget.TextView
@@ -71,6 +72,9 @@ class Enkompass(string: String, private val strategy: Strategy) : SpannableStrin
     fun boldItalics()
             = enkompass(strategy, StyleSpan(Typeface.BOLD_ITALIC))
 
+    fun underline()
+            = enkompass(strategy, UnderlineSpan())
+
     fun monospace()
             = enkompass(strategy, TypefaceSpan("monospace"))
 
@@ -88,7 +92,7 @@ class Enkompass(string: String, private val strategy: Strategy) : SpannableStrin
 
     fun clickable(
             textview: TextView,
-            movementMethod: LinkMovementMethod? = LinkMovementMethod(),
+            movementMethod: MovementMethod? = LinkMovementMethod.getInstance(),
             click: (View) -> Unit
     ): Spannable {
         textview.movementMethod = movementMethod
@@ -101,6 +105,9 @@ class Enkompass(string: String, private val strategy: Strategy) : SpannableStrin
         val alignment = if (alignBaseline) ImageSpan.ALIGN_BASELINE else ImageSpan.ALIGN_BOTTOM
         return enkompass(strategy, ImageSpan(drawable, alignment))
     }
+
+    fun url(url: String)
+            = enkompass(strategy, URLSpan(url))
 
     fun custom(spans: () -> Any) = enkompass(strategy, spans())
 }

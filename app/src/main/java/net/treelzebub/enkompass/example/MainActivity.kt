@@ -23,11 +23,13 @@ class MainActivity : AppCompatActivity() {
         textview_string.text = string.enkompass(substring) {
             bold()
             italics()
+            underline()
             foregroundColor(resources.getColor(android.R.color.white))
             backgroundColor(resources.getColor(android.R.color.black))
-            clickable(textview_string) {
-                Toast.makeText(this@MainActivity, "Boop!", Toast.LENGTH_SHORT).show()
-            }
+            size(2f)
+//            clickable(textview_string) {
+//                Toast.makeText(this@MainActivity, "Boop!", Toast.LENGTH_SHORT).show()
+//            }
         }
 
         // "Wow" occurs twice, so we can use the IntRange signature to only style the first one.
