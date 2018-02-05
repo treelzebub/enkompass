@@ -2,6 +2,7 @@ package net.treelzebub.enkompass.example
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
@@ -21,21 +22,21 @@ class MainActivity : AppCompatActivity() {
         val string = "Hey this is neat!"
         val substring = "neat!"
         textview_string.text = string.enkompass(substring) {
+            size(2f)
             bold()
             italics()
             underline()
-            foregroundColor(resources.getColor(android.R.color.white))
             backgroundColor(resources.getColor(android.R.color.black))
-            size(2f)
-//            clickable(textview_string) {
-//                Toast.makeText(this@MainActivity, "Boop!", Toast.LENGTH_SHORT).show()
-//            }
+            clickable(textview_string) {
+                Toast.makeText(this@MainActivity, "Boop!", Toast.LENGTH_SHORT).show()
+            }
         }
 
         // "Wow" occurs twice, so we can use the IntRange signature to only style the first one.
         textview_intrange.text = "Wow Bob Wow.".enkompass(0 until 4) {
             bold()
             italics()
+            foregroundColor(ContextCompat.getColor(this@MainActivity, android.R.color.holo_blue_light))
         }
     }
 }
