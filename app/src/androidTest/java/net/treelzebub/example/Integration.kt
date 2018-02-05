@@ -15,7 +15,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 
@@ -25,8 +24,11 @@ class Integration {
     @get:Rule
     val activityRule = ActivityTestRule(MainActivity::class.java)
 
-    val textview: TextView
-        get() = activityRule.activity.findViewById<TextView>(R.id.textview_string)!!
+    private val activity: MainActivity
+        get() = activityRule.activity
+
+    private val textview: TextView
+        get() = activity.findViewById(R.id.textview_string)!!
 
     @Test fun clickable() {
         val str = "Test string"
@@ -45,7 +47,7 @@ class Integration {
     @Test fun foregroundColor() {
         val str = "Gabba gabba hey"
         val sub = "hey"
-        val black = ContextCompat.getColor(activityRule.activity, android.R.color.black)
+        val black = ContextCompat.getColor(activity, android.R.color.black)
 
         val spannable = str.enkompass(sub) {
             foregroundColor(black)
@@ -58,7 +60,7 @@ class Integration {
     @Test fun backgroundColor() {
         val str = "Gabba gabba hey"
         val sub = "hey"
-        val black = ContextCompat.getColor(activityRule.activity, android.R.color.black)
+        val black = ContextCompat.getColor(activity, android.R.color.black)
 
         val spannable = str.enkompass(sub) {
             backgroundColor(black)
@@ -71,7 +73,7 @@ class Integration {
     @Test fun image() {
         val str = "i'm hungry"
         val sub = "hungry"
-        val drawable = activityRule.activity.getDrawable(android.R.drawable.ic_dialog_info)
+        val drawable = ContextCompat.getDrawable(activity, android.R.drawable.ic_dialog_info)!!
 
         val spannable = str.enkompass(sub) {
             image(drawable, true)

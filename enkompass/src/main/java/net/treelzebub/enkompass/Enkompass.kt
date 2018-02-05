@@ -63,43 +63,43 @@ class Enkompass(string: String, private val strategy: Strategy) : SpannableStrin
 
 
     fun bold()
-            = apply { enkompass(strategy, StyleSpan(Typeface.BOLD)) }
+            = enkompass(strategy, StyleSpan(Typeface.BOLD))
 
     fun italics()
-            = apply { enkompass(strategy, StyleSpan(Typeface.ITALIC)) }
+            = enkompass(strategy, StyleSpan(Typeface.ITALIC))
 
     fun boldItalics()
-            = apply { enkompass(strategy, StyleSpan(Typeface.BOLD_ITALIC)) }
+            = enkompass(strategy, StyleSpan(Typeface.BOLD_ITALIC))
 
     fun monospace()
-            = apply { enkompass(strategy, TypefaceSpan("monospace")) }
+            = enkompass(strategy, TypefaceSpan("monospace"))
 
     fun style(context: Context, @StyleRes style: Int)
-            = apply { enkompass(strategy, TextAppearanceSpan(context, style)) }
+            = enkompass(strategy, TextAppearanceSpan(context, style))
 
     fun foregroundColor(resolvedColor: Int)
-            = apply { enkompass(strategy, ForegroundColorSpan(resolvedColor)) }
+            = enkompass(strategy, ForegroundColorSpan(resolvedColor))
 
     fun backgroundColor(resolvedColor: Int)
-            = apply { enkompass(strategy, BackgroundColorSpan(resolvedColor)) }
+            = enkompass(strategy, BackgroundColorSpan(resolvedColor))
 
     fun size(proportion: Float)
-            = apply { enkompass(strategy, RelativeSizeSpan(proportion)) }
+            = enkompass(strategy, RelativeSizeSpan(proportion))
 
     fun clickable(
             textview: TextView,
             movementMethod: LinkMovementMethod? = LinkMovementMethod(),
             click: (View) -> Unit
-    ) = apply {
+    ): Spannable {
         textview.movementMethod = movementMethod
-        enkompass(strategy, object : ClickableSpan() {
+        return enkompass(strategy, object : ClickableSpan() {
             override fun onClick(widget: View) = click(widget)
         })
     }
 
-    fun image(drawable: Drawable, alignBaseline: Boolean) = apply {
+    fun image(drawable: Drawable, alignBaseline: Boolean): Spannable {
         val alignment = if (alignBaseline) ImageSpan.ALIGN_BASELINE else ImageSpan.ALIGN_BOTTOM
-        enkompass(strategy, ImageSpan(drawable, alignment))
+        return enkompass(strategy, ImageSpan(drawable, alignment))
     }
 
     fun custom(spans: () -> Any) = enkompass(strategy, spans())
