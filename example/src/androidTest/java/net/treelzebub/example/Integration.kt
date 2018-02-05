@@ -36,7 +36,7 @@ class Integration {
 
         var flag = false
         val spannable = str.enkompass(sub) {
-            clickable(textview) { flag = true}
+            clickable(textview) { flag = true }
         }
 
         val clickable = spannable.findSpan<ClickableSpan>(sub)
