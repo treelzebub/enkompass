@@ -4,10 +4,7 @@ import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.support.v4.content.ContextCompat
 import android.text.Spannable
-import android.text.style.BackgroundColorSpan
-import android.text.style.ClickableSpan
-import android.text.style.ForegroundColorSpan
-import android.text.style.ImageSpan
+import android.text.style.*
 import android.widget.TextView
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertTrue
@@ -82,6 +79,17 @@ class Integration {
 
         assertEquals(drawable, span.drawable)
         assertEquals(ImageSpan.ALIGN_BASELINE, span.verticalAlignment)
+    }
+
+    @Test fun size() {
+        val str = "size matters up in here"
+        val sub = "matters"
+        val prop = 5f
+
+        val spannable = str.enkompass(sub) { size(prop) }
+        val span = spannable.findSpan<RelativeSizeSpan>(sub)
+
+        assertEquals(prop, span.sizeChange)
     }
 
     @Test fun custom() {

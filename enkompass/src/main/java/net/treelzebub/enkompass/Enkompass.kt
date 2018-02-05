@@ -62,13 +62,17 @@ class Enkompass(string: String, private val strategy: Strategy) : SpannableStrin
     class RangeStrategy(override val range: IntRange) : Strategy
 
 
-    fun bold() = apply { enkompass(strategy, StyleSpan(Typeface.BOLD)) }
+    fun bold()
+            = apply { enkompass(strategy, StyleSpan(Typeface.BOLD)) }
 
-    fun italics() = apply { enkompass(strategy, StyleSpan(Typeface.ITALIC)) }
+    fun italics()
+            = apply { enkompass(strategy, StyleSpan(Typeface.ITALIC)) }
 
-    fun boldItalics() = apply { enkompass(strategy, StyleSpan(Typeface.BOLD_ITALIC)) }
+    fun boldItalics()
+            = apply { enkompass(strategy, StyleSpan(Typeface.BOLD_ITALIC)) }
 
-    fun monospace() = apply { enkompass(strategy, TypefaceSpan("monospace")) }
+    fun monospace()
+            = apply { enkompass(strategy, TypefaceSpan("monospace")) }
 
     fun style(context: Context, @StyleRes style: Int)
             = apply { enkompass(strategy, TextAppearanceSpan(context, style)) }
@@ -78,6 +82,9 @@ class Enkompass(string: String, private val strategy: Strategy) : SpannableStrin
 
     fun backgroundColor(resolvedColor: Int)
             = apply { enkompass(strategy, BackgroundColorSpan(resolvedColor)) }
+
+    fun size(proportion: Float)
+            = apply { enkompass(strategy, RelativeSizeSpan(proportion)) }
 
     fun clickable(
             textview: TextView,
