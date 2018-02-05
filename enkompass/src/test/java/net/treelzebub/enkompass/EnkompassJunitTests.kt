@@ -27,7 +27,7 @@ class EnkompassJunitTests {
         val sub = "456"
         val which = str.which(sub)
 
-        assertEquals(4..7, which)
+        assertEquals(4 until 7, which)
     }
 
     @Test fun which_with_span() {
@@ -37,7 +37,7 @@ class EnkompassJunitTests {
 
         val span = str.enkompass(sub) { bold() }
 
-        val result = span.getSpans(which.first, which.last-1, StyleSpan::class.java)
+        val result = span.getSpans(which.first, which.last - 1, StyleSpan::class.java)
         assertNotNull(result)
     }
 

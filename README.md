@@ -17,7 +17,7 @@ A sane way of working with Android Spannables
 
 ### Or by IntRange, if your substring occurs more than once in the outer string:
 ```kotlin
-"Wow Bob Wow.".enkompass(0 until 4) {
+"Wow Bob Wow.".enkompass(0 until 3) {
     monospace()
 }
 ```

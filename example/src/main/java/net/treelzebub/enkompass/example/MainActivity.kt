@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // "Wow" occurs twice, so we can use the IntRange signature to only style the first one.
-        textview_intrange.text = "Wow Bob Wow.".enkompass(0 until 4) {
+        textview_intrange.text = "Wow Bob Wow.".enkompass(0 until 3) {
             bold()
             italics()
             foregroundColor(ContextCompat.getColor(this@MainActivity, android.R.color.holo_blue_light))

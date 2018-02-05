@@ -134,14 +134,14 @@ class Enkompass(string: String, private val strategy: Strategy) : SpannableStrin
 
 @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
 fun CharSequence.enkompass(strategy: Enkompass.Strategy, vararg spans: Any): Spannable {
-    val substring = substring(strategy.range.let { it.first until it.last })
+    val substring = substring(strategy.range)
     if (substring !in this) {
         throw IllegalArgumentException("Substring not contained in the given String.")
     }
 
     val spannable = this as? Spannable ?: SpannableString(this)
     spans.forEach {
-        spannable.setSpan(it, strategy.range.first, strategy.range.last, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+        spannable.setSpan(it, strategy.range.first, strategy.range.last + 1, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
     }
     return spannable
 }
@@ -150,5 +150,5 @@ fun CharSequence.enkompass(strategy: Enkompass.Strategy, vararg spans: Any): Spa
 fun CharSequence.which(substring: String): IntRange {
     val start = indexOf(substring)
     val end = start + substring.length
-    return start..end
+    return start until end
 }
