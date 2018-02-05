@@ -6,8 +6,6 @@ import android.support.v4.content.ContextCompat
 import android.text.Spannable
 import android.text.style.*
 import android.widget.TextView
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertTrue
 import net.treelzebub.enkompass.enkompass
 import net.treelzebub.enkompass.example.MainActivity
 import net.treelzebub.enkompass.example.R
@@ -15,6 +13,10 @@ import net.treelzebub.enkompass.which
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 
 @RunWith(AndroidJUnit4::class)
@@ -93,7 +95,32 @@ class Integration {
     }
 
     @Test fun custom() {
+        val str = "ride johnny, ride"
+        val sub = "johnny"
 
+        val spannable = str.enkompass(sub) {
+            custom {
+                BulletSpan()
+                AbsoluteSizeSpan(0)
+            }
+        }
+
+        val which = str.which(sub)
+        val spans = spannable.getSpans(which.first, which.last-1, Any::class.java)
+
+        assert(spans.any { it is BulletSpan })
+        assert(spans.any { it is AbsoluteSizeSpan })
+    }
+
+    @Test fun findSpan() {
+        val str = "poopie doo"
+        val sub = "doo"
+
+        val spannable = str.enkompass(sub) {}
+
+        assertFailsWith<NullPointerException> {
+            spannable.findSpan<ImageSpan>(sub)
+        }
     }
 
     private inline fun <reified Span : Any> Spannable.findSpan(substring: String): Span {
