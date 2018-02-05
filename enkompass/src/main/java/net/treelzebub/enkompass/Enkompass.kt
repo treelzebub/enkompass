@@ -1,15 +1,11 @@
 package net.treelzebub.enkompass
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.support.annotation.StyleRes
-import android.support.annotation.VisibleForTesting
 import android.text.Spannable
 import android.text.SpannableString
-import android.text.SpannableStringBuilder
-import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.method.MovementMethod
 import android.text.style.*
@@ -18,52 +14,10 @@ import android.widget.TextView
 
 /**
  * Created by Tre Murillo on 2/3/18
- */
-
-
-/**
- * Kotlin-style builder for applying various spans to one substring.
- * Example:
- *     "Woohoo!".enkompass("hoo!") {
- *         boldItalics()
- *         clickable(textview) { foo() }
- *         foregroundColor(getColor(R.color.light_urple))
- *     }
  *
- * @param[String] (the extended class) The complete string, some or all of which will have
- *                 spannables applied.
- * @param[substring] The part of the String you want to apply spannables to.
- * @param[enkompass] Any function of the [Enkompass] class. This lambda applies spannables to
- *                   the [substring], and enables the snazzy DSL.
- *
- * @return The resulting [SpannableStringBuilder], with the applied spannables.
- */
-fun String.enkompass(substring: String, enkompass: Enkompass.() -> Unit)
-        = Enkompass(this, Enkompass.SubstringStrategy(this, substring)).apply(enkompass)
-
-/**
- * Kotlin-style builder for applying various spans to a range of characters.
- *
- * For example, this will make "012" bold:
- *      "012345".enkompass(0 until 3) { bold() }
- *
- * @param[String] (the extended class) The complete string, some or all of which will have
- *                 spannables applied.
- * @param[intRange] The range of indices in the outer string that you want spanned. Use of Kotlin's
- *                  `until` is recommended. The last index will not have a span applied.
- *                  `0 until 3` will span the first 3 indices: 0, 1, and 2.
- * @param[enkompass] Any function of the [Enkompass] class. This lambda applies spannables to
- *                   the [substring], and enables the snazzy DSL.
- */
-fun String.enkompass(intRange: IntRange, enkompass: Enkompass.() -> Unit)
-        = Enkompass(this, Enkompass.RangeStrategy(intRange)).apply(enkompass)
-
-
-/**
  * This is not intended to be used directly.
  */
-@SuppressLint("VisibleForTests")
-@Deprecated("I made you extension functions!")
+//@Deprecated("I made you extension functions!")
 class Enkompass(string: String, private val strategy: Strategy) : SpannableString(string) {
 
     interface Strategy {
@@ -130,25 +84,4 @@ class Enkompass(string: String, private val strategy: Strategy) : SpannableStrin
             = enkompass(strategy, URLSpan(url))
 
     fun custom(spans: () -> Any) = enkompass(strategy, spans())
-}
-
-@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-fun CharSequence.enkompass(strategy: Enkompass.Strategy, vararg spans: Any): Spannable {
-    val substring = substring(strategy.range)
-    if (substring !in this) {
-        throw IllegalArgumentException("Substring not contained in the given String.")
-    }
-
-    val spannable = this as? Spannable ?: SpannableString(this)
-    spans.forEach {
-        spannable.setSpan(it, strategy.range.first, strategy.range.last + 1, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
-    }
-    return spannable
-}
-
-@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-fun CharSequence.which(substring: String): IntRange {
-    val start = indexOf(substring)
-    val end = start + substring.length
-    return start until end
 }
