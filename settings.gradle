@@ -1,3 +1,3 @@
 rootProject.name="enkompass-parent"
 
-include ':app', ':enkompass'
+include ':example', ':enkompass'
